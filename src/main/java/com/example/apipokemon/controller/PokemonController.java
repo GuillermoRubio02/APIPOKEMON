@@ -1,4 +1,3 @@
-
 package com.example.apipokemon.controller;
 
 import java.util.ArrayList;
@@ -17,10 +16,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.example.apipokemon.controller.converter.PokemonConverter;
 import com.example.apipokemon.controller.dto.PokemonDto;
 import com.example.apipokemon.persistance.model.Pokemon;
 import com.example.apipokemon.service.PokemonService;
+import com.example.apipokemon.persistance.model.PokemonStats;
+import com.example.apipokemon.service.PokemonStatsService;
+import com.example.apipokemon.persistance.model.Ability;
+import com.example.apipokemon.service.AbilityService;
+import com.example.apipokemon.controller.converter.PokemonStatsConverter;
+import com.example.apipokemon.controller.dto.PokemonStatsDto;
+import com.example.apipokemon.controller.converter.AbilityConverter;
+import com.example.apipokemon.controller.dto.AbilityDto;
 
 import lombok.AllArgsConstructor;
 
@@ -33,6 +41,14 @@ public class PokemonController {
     PokemonService pokemonService;
 
     PokemonConverter converter;
+
+    PokemonStatsService pokemonStatsService;
+
+    AbilityService abilityService;
+
+    PokemonStatsConverter pokemonStatsConverter;
+
+    AbilityConverter abilityConverter;
 
     @GetMapping
     public ResponseEntity<List<PokemonDto>> getAllPokemons() {
@@ -57,6 +73,37 @@ public class PokemonController {
         return ResponseEntity.status(HttpStatus.OK).body(converter.convertToDto(pokemon));
 
     }
+
+
+    @GetMapping("/{id}/stats")
+    public ResponseEntity<PokemonStatsDto> getPokemonStats(@PathVariable Long id) {
+
+        PokemonStats stats = pokemonStatsService.getStatsByPokemonId(id);
+
+        return ResponseEntity.ok(
+        pokemonStatsConverter.convertToDto(stats)
+    );
+
+    }
+
+
+
+    
+    @GetMapping("/{id}/abilities")
+    public ResponseEntity<List<AbilityDto>> getPokemonAbilities(
+    @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+        abilityService.getAbilitiesByPokemonId(id)
+            .stream()
+            .map(abilityConverter::convertToDto)
+            .collect(Collectors.toList())
+    );
+
+    }
+
+
+
 
     @PostMapping
     public ResponseEntity<PokemonDto> createPokemon(@RequestBody PokemonDto pokemonDto) {

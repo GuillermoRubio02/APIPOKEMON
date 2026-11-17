@@ -9,5 +9,10 @@ public class PokemonDto {
 
     String name;
 
+    String imagen_url;
+
     String type;
+
+    Long trainerId;
+
 }

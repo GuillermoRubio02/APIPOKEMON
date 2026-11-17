@@ -1,4 +1,5 @@
-package com.example.apipokemon.service;
+
+package com.example.apipokemon.service.impl;
 
 import java.util.List;
 
@@ -6,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.apipokemon.persistance.model.Pokemon;
 import com.example.apipokemon.persistance.repository.PokemonRepository;
+import com.example.apipokemon.service.PokemonService;
 
 import lombok.AllArgsConstructor;
 
@@ -33,12 +35,15 @@ public class PokemonServiceImpl implements PokemonService {
     @Override
     public Pokemon updatePokemon(Long id, Pokemon pokemon) {
         Pokemon existingPokemon = pokemonRepository.findById(id).orElse(null);
+
         if (existingPokemon == null) {
             return null;
         }
+
         existingPokemon.setName(pokemon.getName());
         existingPokemon.setImagen_url(pokemon.getImagen_url());
         existingPokemon.setType(pokemon.getType());
+
         return pokemonRepository.save(existingPokemon);
     }
 
